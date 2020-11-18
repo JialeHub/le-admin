@@ -1,0 +1,22 @@
+body,html{
+  //height: 100%;
+}
+html{
+  overflow-y: auto!important;
+}
+#app{
+  background-color: #F1F1F1;
+}
+a{
+  transition-duration: .05s;
+  transition-timing-function: ease-in-out;
+}
+.underLink{
+  color: #0073aa;
+  text-decoration: underline!important;
+}
+a:hover{
+  color: #00a0d2!important;
+  transition-duration: .05s!important;
+  transition-timing-function: ease-in-out!important;
+}
