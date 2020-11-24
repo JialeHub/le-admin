@@ -4,9 +4,6 @@ body,html{
 html{
   overflow-y: auto!important;
 }
-#app{
-  background-color: #F1F1F1;
-}
 a{
   transition-duration: .05s;
   transition-timing-function: ease-in-out;
@@ -19,4 +16,10 @@ a:hover{
   color: #00a0d2!important;
   transition-duration: .05s!important;
   transition-timing-function: ease-in-out!important;
+}
+.v-sheet.v-app-bar.v-toolbar:not(.v-sheet--outlined) {
+  box-shadow: 0 2px 30px -1px rgba(85,85,85,.08), 0 4px 30px 0 rgba(85,85,85,.06), 0 1px 30px 0 rgba(85,85,85,.03);
+}
+.v-application .elevation-1 {
+  box-shadow: 0 2px 10px -1px rgba(85,85,85,.08),0 1px 10px 0 rgba(85,85,85,.06),0 1px 30px 0 rgba(85,85,85,.03) !important;
 }

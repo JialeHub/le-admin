@@ -1,30 +1,26 @@
 <template>
-  <v-app>
-    <v-main>
-      <transition name="fade" mode="out-in">
-        <router-view class="router" style=""/>
-      </transition>
-    </v-main>
-  </v-app>
+  <transition name="fade" mode="out-in">
+    <router-view class="router" style=""/>
+  </transition>
 </template>
 
 <script>
 
-export default {
-  name: 'App',
+  export default {
+    name: 'App',
 
-  components: {
+    components: {},
 
-  },
+    mounted() {
 
-  data: () => ({
-    //
-  }),
-};
+    },
+
+    data: () => ({}),
+  };
 </script>
 
 <style lang="scss">
-  #app{
+  #app {
 
   }
 </style>
