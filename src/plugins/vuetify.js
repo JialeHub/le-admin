@@ -10,7 +10,7 @@ export default new Vuetify({
   theme: {
     disable: false,
     options: {
-      customProperties: false,
+      customProperties: true,
     },
     themes: {
       light: {

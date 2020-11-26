@@ -39,6 +39,23 @@ export const addBaseURL = (string, noAddBase) => {
 }
 
 /**
+ * @param {Object} target
+ * @param {Object} object
+ * @description target从object中取值 target <= object
+ * */
+export const objectEvaluate = (target, object) => {
+  for (let key in target) {
+    if (Object.prototype.hasOwnProperty.call(object, key)) {
+      if (object[key] instanceof Array) {
+        target[key] = [...object[key]]
+      } else {
+        target[key] = object[key]
+      }
+    }
+  }
+};
+
+/**
  * @param data
  * @return {String}
  * @description 尝试JSON格式化

@@ -1,16 +1,16 @@
 <template>
   <v-app id="layout">
-    <v-app-bar app color="white">
-      <app-bar @navigationFun="navigationFun" @settingsFun="settingsFun" slot="default"/>
+    <v-app-bar app :dark="darkToolbar" :light="lightToolbar" :absolute="fixToolbar" :elevation="elevationToolbar">
+      <app-bar @navigation-fun="navigationFun" @settings-fun="settingsFun" />
     </v-app-bar>
-    <v-navigation-drawer app v-model="navigation" class="elevation-1" floating >
+    <v-navigation-drawer app v-model="navigation" class="elevation-1" floating :dark="darkThemeMenu" :light="lightThemeMenu" >
       <drawer-navigation/>
     </v-navigation-drawer>
-    <v-navigation-drawer fixed right v-model="settings" class="elevation-1" floating temporary>
-      <drawer-settings/>
+    <v-navigation-drawer fixed right v-model="settings" class="elevation-1" floating temporary :dark="darkSetting" :light="lightSetting" >
+      <drawer-settings @settings-fun="settingsFun"/>
     </v-navigation-drawer>
     <v-main class="main">
-      <v-container fluid>
+      <v-container :fluid="contentLayoutFluid">
         <transition name="fade" mode="out-in">
           <router-view class="routerMain"/>
         </transition>
@@ -26,7 +26,7 @@
         <v-btn color="primary" small class="closeBtn" icon @click="loginDialog=false">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <container-login @closeLoginDialog="loginDialog=false" comStatus="expireLogin"/>
+        <container-login @close-login-dialog="loginDialog=false" comStatus="expireLogin"/>
       </v-card>
     </v-dialog>
   </v-app>
@@ -38,7 +38,7 @@
     data() {
       return {
         navigation: true,
-        settings: true,
+        settings: false,
       }
     },
     components: {
@@ -57,6 +57,34 @@
       },
     },
     computed: {
+      darkToolbar(){
+        return this.$storeGet.setting.themesToolbar==='dark'
+      },
+      lightToolbar(){
+        return this.$storeGet.setting.themesToolbar==='light'
+      },
+      darkThemeMenu(){
+        return this.$storeGet.setting.themeMenu==='dark'
+      },
+      lightThemeMenu(){
+        return this.$storeGet.setting.themeMenu==='light'
+      },
+      darkSetting(){
+        return this.$storeGet.setting.themeSetting==='dark'
+      },
+      lightSetting(){
+        return this.$storeGet.setting.themeSetting==='light'
+      },
+      contentLayoutFluid(){
+        return this.$storeGet.setting.contentLayout==='fluid'
+      },
+      fixToolbar(){
+        return !this.$storeGet.setting.fixToolbar
+      },
+      elevationToolbar(){
+        let v = this.$storeGet.setting.fixToolbar
+        return v?1:0
+      },
       loginDialog: {
         get() {
           return this.$storeGet.expireLogin
@@ -72,11 +100,10 @@
 <style lang="scss">
   #layout {
     .main {
-      background-color: #F2F5F8;
+      /*background-color: #F2F5F8;*/
     }
 
     .loginDialog {
-      background-color: #F2F5F8;
       padding-bottom: 20px;
 
       .closeBtn {

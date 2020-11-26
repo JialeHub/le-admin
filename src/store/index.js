@@ -24,6 +24,11 @@ const plugins = navigator.cookieEnabled?[
     reducer: val => ({info: val.info}),
   }),
   createPersistedState({
+    key: `${settings.prefix}-SETTINGS`,
+    storage: window.localStorage,
+    reducer: val => ({settings: val.settings})
+  }),
+  createPersistedState({
     key: `${settings.prefix}-TOKEN`,
     storage: {
       getItem: key => Cookies.get(key),

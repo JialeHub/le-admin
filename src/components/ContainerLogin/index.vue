@@ -21,7 +21,7 @@
     </v-row>
     <!--登录框-->
     <v-row no-gutters>
-      <v-sheet class="wpSheet loginSheet w100">
+      <v-sheet class="loginSheet w100" elevation="2">
         <v-form ref="form" v-model="formRules.formValid" :lazy-validation="true">
           <v-text-field v-model="form.username" label="用户名或电子邮件地址" required error-count="0"
                         :rules="formRules.usernameRules"></v-text-field>
@@ -92,7 +92,7 @@
       },
     },
     beforeDestroy() {
-      this.$emit('closeLoginDialog')
+      this.$emit('close-login-dialog')
     },
     methods: {
       init() {
@@ -117,7 +117,7 @@
                 });
                 await this.$storeSet('setToken', res['token'])
                 if (this.comStatus === 'expireLogin') {
-                  this.$emit('closeLoginDialog')
+                  this.$emit('close-login-dialog')
                 } else {
                   await this.$router.push('/')
                 }
@@ -248,7 +248,7 @@
     }
 
     .loginSheet {
-      padding-top: 36px;
+      padding: 36px 24px 38px;
     }
 
     .navDiv {

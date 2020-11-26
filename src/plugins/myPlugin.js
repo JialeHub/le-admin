@@ -13,6 +13,7 @@ let assert = {
   $tryJSONStringify: globalMethod.tryJSONStringify,
   $tryJSONParse: globalMethod.tryJSONParse,
   $tryReadUnknown: globalMethod.tryReadUnknown,
+  $objectEvaluate: globalMethod.objectEvaluate,
   $storeSet: store.dispatch,
   $resetStore: resetStore,
 }
@@ -32,6 +33,9 @@ const myPlugin = {
         },
         '$storeGet'() {
           return this.$store.getters
+        },
+        '$settings'() {
+          return this.$store.getters.setting
         },
       }
     })

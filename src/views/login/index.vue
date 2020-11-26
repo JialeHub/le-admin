@@ -20,6 +20,6 @@
 
 <style lang="scss">
   #login {
-    background-color: #F2F5F8;
+
   }
 </style>

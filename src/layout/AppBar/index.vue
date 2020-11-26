@@ -13,13 +13,13 @@
 
     <v-menu bottom min-width="200px" rounded offset-y>
       <template v-slot:activator="{ on }">
-        <v-btn icon v-on="on" elevation="2">
-          <v-avatar color="white" size="40" >
+        <v-btn icon v-on="on" elevation="1">
+          <v-avatar size="40" >
             <v-btn icon><v-icon>mdi-account-circle</v-icon></v-btn>
           </v-avatar>
         </v-btn>
       </template>
-      <v-card elevation="2">
+      <v-card >
         <v-list-item-content class="justify-center">
           <div class="mx-auto text-center">
             <v-avatar color="brown" >
@@ -30,11 +30,11 @@
              799670335@qq.com
             </p>
             <v-divider class="my-3"></v-divider>
-            <v-btn depressed rounded text >
+            <v-btn depressed rounded text>
               Edit Account
             </v-btn>
             <v-divider class="my-3"></v-divider>
-            <v-btn depressed rounded text >
+            <v-btn depressed rounded text>
               Disconnect
             </v-btn>
           </div>
@@ -53,10 +53,10 @@
     },
     methods: {
       navigationSet(){
-        this.$emit('navigationFun',)
+        this.$emit('navigation-fun',)
       },
       settingsSet(){
-        this.$emit('settingsFun',)
+        this.$emit('settings-fun',)
       },
     },
   }

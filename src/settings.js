@@ -5,7 +5,9 @@ module.exports = {
   // 网站标题
   title: 'LE后台管理系统',
   // 菜单标题
-  menuTitle: '老撾韻達 - 后台管理',
+  menuTitle: 'LE · 后台管理系统',
+  // 版本号
+  version: '1.0.0',
   // 底部文字
   footerTxt: '',
   // 备案号
@@ -32,6 +34,23 @@ module.exports = {
   /**
    * @description 样式设置
    * */
+  // 主题
+  themes: 'light',
+  // 内容布局
+  contentLayout: 'fluid',
+  // 菜单主题
+  themeMenu: 'global',
+  // 工具栏主题
+  themesToolbar: 'global',
+  // 设置栏主题
+  themeSetting: 'global',
+  // 工具栏固定
+  fixToolbar: true,
+  // 侧边logo
+  logoMenu: true,
+
+
+
   // 是否固定头部
   isFixHeader: true,
   // 是否显示logo
