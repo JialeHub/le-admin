@@ -14,6 +14,7 @@ const routes = [
     component: () => import('@/layout'),
     children: [
       {name: 'home', path: '/home', meta: {title: '首页'}, component: () => import('@/views/home/index')},
+      {name: 'home2', path: '/home2', meta: {title: '首页2'}, component: () => import('@/views/home/index')},
     ]
   },
   {

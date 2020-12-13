@@ -3,9 +3,9 @@ module.exports = {
    * @description 网站设置
    * */
   // 网站标题
-  title: 'LE后台管理系统',
+  title: '海洋图片分享后台管理系统',
   // 菜单标题
-  menuTitle: 'LE · 后台管理系统',
+  menuTitle: 'Img - Admin',
   // 版本号
   version: '1.0.0',
   // 底部文字
@@ -40,6 +40,8 @@ module.exports = {
   contentLayout: 'fluid',
   // 菜单主题
   themeMenu: 'global',
+  // 迷你菜单
+  miniMenu: false,
   // 工具栏主题
   themesToolbar: 'global',
   // 设置栏主题

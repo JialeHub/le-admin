@@ -25,14 +25,14 @@ module.exports = {
     "disableHostCheck": true,
     proxy: {
       '/devApi/': {
-        target: 'http://127.0.0.1:8000/',
+        target: 'http://127.0.0.1:8000',
         changeOrigin: true,
         pathRewrite: {
           '^/devApi/': ''
         }
       },
       '/prodApi/': {
-        target: 'http://49.235.110.8:8000/',
+        target: 'http://49.235.110.8:2346/',
         changeOrigin: true,
         pathRewrite: {
           '^/prodApi/': ''

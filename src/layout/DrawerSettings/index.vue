@@ -1,11 +1,12 @@
 <template>
   <div id="drawerSettings">
     <v-list>
-      <settings-item itemTitle="系统设置">
-        <span slot="subtitle">Settings</span>
-        <v-btn icon @click="closeSettings" slot="action">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
+      <settings-item itemTitle="系统设置" itemSubtitle="Settings">
+        <template #action>
+          <v-btn icon @click="closeSettings">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </template>
       </settings-item>
       <v-divider />
     </v-list>
@@ -44,10 +45,13 @@
         </v-btn-toggle>
       </settings-item>
       <settings-item itemTitle="工具栏固定">
-        <v-switch v-model="fixToolbar"></v-switch>
+        <template #right><v-switch v-model="fixToolbar"></v-switch></template>
+      </settings-item>
+      <settings-item itemTitle="迷你菜单">
+        <template #right><v-switch v-model="miniMenu"></v-switch></template>
       </settings-item>
       <settings-item itemTitle="显示Logo">
-        <v-switch v-model="logoMenu"></v-switch>
+        <template #right><v-switch v-model="logoMenu"></v-switch></template>
       </settings-item>
     </v-list>
   </div>
@@ -135,6 +139,17 @@
         set(value) {
           this.$storeSet('changeSetting', {
             key: 'logoMenu',
+            value: value
+          })
+        }
+      },
+      miniMenu: {
+        get() {
+          return this.$storeGet.setting.miniMenu;
+        },
+        set(value) {
+          this.$storeSet('changeSetting', {
+            key: 'miniMenu',
             value: value
           })
         }

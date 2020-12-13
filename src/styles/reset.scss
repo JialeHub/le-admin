@@ -45,9 +45,9 @@ input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 1000px rgba(255,255,255,1) inset !important;
 }
 
-input:-webkit-autofill.theme--dark.v-input input, {
+.theme--dark input:-webkit-autofill, {
   text-fill-color: #FFFFFF;
-  //-webkit-text-fill-color: rgba(30,30,30,1) !important;
+  -webkit-text-fill-color: #FFFFFF !important;
   background-color: rgba(30,30,30,1) !important;
   -webkit-box-shadow: 0 0 0 1000px rgb(30,30,30) inset !important;
 }

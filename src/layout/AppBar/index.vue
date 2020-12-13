@@ -4,7 +4,6 @@
 
     <v-spacer></v-spacer>
 
-
     <v-app-bar-nav-icon @click.stop="settingsSet">
       <v-btn icon><v-icon>mdi-cog-outline</v-icon></v-btn>
     </v-app-bar-nav-icon>
@@ -59,6 +58,7 @@
         this.$emit('settings-fun',)
       },
     },
+
   }
 </script>
 

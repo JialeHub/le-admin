@@ -268,4 +268,7 @@
       }
     }
   }
+  .theme--dark .loginContainer .navDiv .otherLink {
+    color: rgba(255, 255, 255, 0.7);
+  }
 </style>

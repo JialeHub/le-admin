@@ -22,16 +22,40 @@ a:hover {
 .theme--light.v-app-bar.v-toolbar.v-sheet{
   background-color: #FFFFFF;
 }
-.theme--dark.v-application {
-  background: #111b27;
-  color: #edf0f2;
-}
 .theme--light.v-application {
   background: #f2f5f8;
-  color: rgba(0,0,0,.87);
+  color: #304457;
+}
+.theme--dark.v-application {
+  background: #304457;
+  color: #f2f5f8;
+}
+.theme--dark.v-navigation-drawer {
+  background-color: #1D2935;
+}
+.v-navigation-drawer__border{
+  background-color: rgba(200,210,220,0.4);
+}
+.theme--dark .v-navigation-drawer__border{
+  background-color: rgba(40,50,60,0.4);
+}
+.theme--dark.v-app-bar.v-toolbar.v-sheet {
+  background-color: #263744;
 }
 
 /*重置light主题*/
+
+.v-application .title {
+  font-size: 17px!important;
+  font-weight: 800;
+  letter-spacing: .0125em!important;
+}
+.v-application .overline {
+  font-size: 12px!important;
+  letter-spacing: 2px!important;
+  line-height: 16px;
+  text-transform: uppercase;
+}
 
 
 /*覆盖源码重置海拔阴影*/

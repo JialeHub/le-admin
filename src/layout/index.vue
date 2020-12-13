@@ -3,7 +3,7 @@
     <v-app-bar app :dark="darkToolbar" :light="lightToolbar" :absolute="fixToolbar" :elevation="elevationToolbar">
       <app-bar @navigation-fun="navigationFun" @settings-fun="settingsFun" />
     </v-app-bar>
-    <v-navigation-drawer app v-model="navigation" class="elevation-1" floating :dark="darkThemeMenu" :light="lightThemeMenu" >
+    <v-navigation-drawer app v-model="navigation" width="220" floating :dark="darkThemeMenu" :light="lightThemeMenu" :mini-variant.sync="miniMenu">
       <drawer-navigation/>
     </v-navigation-drawer>
     <v-navigation-drawer fixed right v-model="settings" class="elevation-1" floating temporary :dark="darkSetting" :light="lightSetting" >
@@ -50,7 +50,8 @@
     },
     methods: {
       navigationFun() {
-        this.navigation = !this.navigation
+        if (!this.miniMenu&&this.navigation&&!this.logoMenu)  this.miniMenu = !this.miniMenu;
+        else this.navigation = !this.navigation;
       },
       settingsFun() {
         this.settings = !this.settings
@@ -85,6 +86,20 @@
         let v = this.$storeGet.setting.fixToolbar
         return v?1:0
       },
+      logoMenu() {
+        return this.$storeGet.setting.logoMenu;
+      },
+      miniMenu: {
+        get() {
+          return this.$storeGet.setting.miniMenu;
+        },
+        set(value) {
+          this.$storeSet('changeSetting', {
+            key: 'miniMenu',
+            value: value
+          })
+        }
+      },
       loginDialog: {
         get() {
           return this.$storeGet.expireLogin
@@ -102,6 +117,7 @@
     .main {
       /*background-color: #F2F5F8;*/
     }
+
 
     .loginDialog {
       padding-bottom: 20px;
