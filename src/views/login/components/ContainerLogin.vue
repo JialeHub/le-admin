@@ -14,21 +14,23 @@
         <div v-for="(item,index) in alertObj.msg" :key="index">
           <strong v-if="$notEmpty(item.strong)">{{item.strong}}</strong>
           <span v-if="$notEmpty(item.text)">{{item.text}}</span>
-          <router-link :to="item.link" class="underLink link0" v-if="$notEmpty(item.linkText)">{{item.linkText}}
-          </router-link>
+          <router-link :to="item.link" class="underLink link0" v-if="$notEmpty(item.linkText)">{{item.linkText}}</router-link>
         </div>
       </v-alert>
     </v-row>
     <!--登录框-->
     <v-row no-gutters>
       <v-sheet class="loginSheet w100" elevation="2">
-        <v-form ref="form" v-model="formRules.formValid" :lazy-validation="true">
-          <v-text-field v-model="form.username" label="用户名或电子邮件地址" required error-count="0"
+        <v-form ref="loginForm" v-model="formRules.formValid" :lazy-validation="true">
+          <v-text-field v-model="form.username" label="用户名或电子邮件地址" required error-count="0" ref="username"
+                        @keyup.enter.native="passFocus"
                         :rules="formRules.usernameRules"></v-text-field>
           <v-text-field v-model="form.password" label="密码" required :rules="formRules.passRules" error-count="0"
-                        :type="form.showPass ? 'text' : 'password'"
+                        :type="form.showPass ? 'text' : 'password'" ref="password"
                         :append-icon="form.showPass ? 'mdi-eye' : 'mdi-eye-off'"
-                        @click:append="form.showPass = !form.showPass"></v-text-field>
+                        @click:append="form.showPass = !form.showPass"
+                        @keyup.enter.native="submit"
+          ></v-text-field>
           <v-row no-gutters justify="space-between" align="center">
             <v-checkbox v-model="form.rememberMe" label="记住我的登录信息" :ripple="false"
                         :disabled="!cookieEnabled"></v-checkbox>
@@ -39,7 +41,7 @@
     </v-row>
     <!--其他链接-->
     <v-row no-gutters>
-      <div class="navDiv">
+      <div class="navDiv" v-if="false">
         <p class="nav">
           <router-link to="/forget" class="otherLink link1">忘记密码？</router-link>
         </p>
@@ -53,14 +55,17 @@
 
 <script>
 
-  import {loginApi} from "@/api/Modules";
   import Cookies from "js-cookie"
   import settings from "@/settings";
+  import {login} from "@/utils/auth";
+  import {notEmpty} from "@/utils/globalMethod";
 
   export default {
     name: 'ContainerLogin',
     data() {
       return {
+        redirect: undefined,
+        otherQuery: {},
         alertObj: {},
         cookieEnabled: true,
         alertFlag: false,
@@ -83,6 +88,11 @@
     mounted() {
       this.form.username = this.$storeGet.username;
       this.form.rememberMe = this.$storeGet.rememberMe;
+      if (this.form.username === '') {
+        this.$refs.username.focus()
+      } else if (this.form.password === '') {
+        this.$refs.password.focus()
+      }
       this.init();
     },
     props: {
@@ -95,65 +105,54 @@
       this.$emit('close-login-dialog')
     },
     methods: {
+      passFocus() {
+        this.$refs.password.focus()
+      },
+      getOtherQuery(query) {
+        return Object.keys(query).reduce((acc, cur) => {
+          if (cur !== 'redirect') {
+            acc[cur] = query[cur]
+          }
+          return acc
+        }, {})
+      },
       init() {
         Cookies.remove(`${settings.prefix}-TOKEN`);
         this.$resetStore();
+        if (this.comStatus === 'expireLogin') this.$storeSet('setExpireLogin', true);
       },
-      submit() {
+      async submit() {
         this.formRules.autoValid = false
-        if (this.$refs.form.validate()) {
+        if (this.$refs.loginForm.validate()) {
           this.loginLoading = true;
-          //登录逻辑
-          let data = {...this.form}
-          data['password'] = this.$RSAEncrypt(data['password'])
-          // delete data.rememberMe
-          delete data.showPass
-          loginApi(data).then(res => {
-            if (res.status === 200) {
-              (async () => {
-                await this.$storeSet('setRememberMe', {
-                  rememberMe: this.form.rememberMe,
-                  username: this.form.username
-                });
-                await this.$storeSet('setToken', res['token'])
-                if (this.comStatus === 'expireLogin') {
-                  this.$emit('close-login-dialog')
-                } else {
-                  await this.$router.push('/')
-                }
-                this.alertShow()
-              })()
-            } else if (this.$notEmpty(res['msg'])) {
-              console.warn(res);
-              this.alertShow('server', {color: 'info', msg: [{text: res['msg']}]})
+          //登录
+          let res = await login({...this.form}).catch(err => err);
+          if (res.status === 200) {
+            // 判断当前
+            if (this.comStatus === 'expireLogin') {
+              this.$emit('close-login-dialog')
+              window.location.reload()
             } else {
-              console.error(res);
-              this.alertShow('server', {color: 'error', type: 'error', msg: [{text: '发生未知错误'}]})
+              window.location.href = '/'
             }
-            this.loginLoading = false;
-          }).catch(err => {
-            let serverError = this.$notEmpty(err['data']);//判断是否为网络错误
-            if (!serverError) console.error(err);//打印非网络错误
-            let res = serverError ? err['data'] : {}
-            if (res.status === 401.1) {
-              this.alertShow('server', {
-                type: 'error',
-                color: 'error',
-                msg: [{
-                  strong: '错误：',
-                  text: res['msg'] ? res['msg'] : '用户名或密码不正确。',
-                  linkText: '忘记密码？',
-                  link: '/login?status=passError'
-                }]
-              })
-            } else if (this.$notEmpty(res['msg'])) {
-              this.alertShow('server', {color: 'error', type: 'error', msg: [{text: res['msg']}]})
-            } else {
-              this.alertShow('server', {color: 'error', type: 'error', msg: [{text: '发生未知错误'}]})
-            }
-            this.loginLoading = false;
-          })
-
+            this.alertShow()
+          } else if (res.status === 401.1) {
+            this.alertShow('server', {
+              type: 'error',
+              color: 'error',
+              msg: [{
+                strong: '错误：',
+                text: res['msg'] ? res['msg'] : '用户名或密码不正确。',
+                linkText: '忘记密码？',
+                link: '/login?status=passError'
+              }]
+            })
+          } else if (notEmpty(res['msg'])) {
+            this.alertShow('server', {color: res['errorType'] ? res['errorType'] : 'info', msg: [{text: res['msg']}]})
+          } else {
+            this.alertShow('server', {color: 'error', type: 'error', msg: [{text: '发生未知错误'}]})
+          }
+          this.loginLoading = false;
         } else {
           this.alertShow('errorBucket')
         }
@@ -162,13 +161,13 @@
       resetValidation() {
         this.formRules.autoValid = true
         this.$nextTick(() => {
-          this.$refs.form.resetValidation()
+          this.$refs.loginForm.resetValidation()
         })
       },
       alertShow(status, alertObj) {
         if (status === 'errorBucket') {
           // 表单验证错误
-          let errorBucket = this.$refs.form.inputs.map(item => item.errorBucket)
+          let errorBucket = this.$refs.loginForm.inputs.map(item => item.errorBucket)
           this.alertObj = {
             color: 'error',
             msg: []
@@ -219,6 +218,16 @@
         },
         deep: true,
         immediate: true
+      },
+      $route: {
+        handler: function (route) {
+          const query = route.query
+          if (query) {
+            this.redirect = query.redirect
+            this.otherQuery = this.getOtherQuery(query)
+          }
+        },
+        immediate: true
       }
     },
     components: {}
@@ -268,6 +277,7 @@
       }
     }
   }
+
   .theme--dark .loginContainer .navDiv .otherLink {
     color: rgba(255, 255, 255, 0.7);
   }

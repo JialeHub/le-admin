@@ -2,7 +2,7 @@
 // import * as httpApi from './http'
 
 // 自动获取modules下的*.js
-const modulesFiles = require.context('./Modules', true, /\.js$/)
+const modulesFiles = require.context('./modules', true, /\.js$/)
 let modulesApi = modulesFiles.keys().reduce((modules, modulePath) => {
   // const moduleName = modulePath.replace(/^\.\/(.*)\.\w+$/, '$1')
   for (let key in modulesFiles(modulePath)) {

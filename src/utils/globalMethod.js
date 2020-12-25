@@ -1,5 +1,5 @@
-export {RSAEncrypt} from './cryptology'
-
+// export {RSAEncrypt} from './cryptology'
+import {format} from 'silly-datetime'
 /**
  * @param value
  * @return {Boolean}
@@ -36,6 +36,31 @@ export const addBaseURL = (string, noAddBase) => {
   } else {
     return ''
   }
+}
+
+/**
+ * @return {String}
+ * @description 文件大小转化
+ * @param size
+ * */
+export const sizeToStr = (size) => {
+  let data = "";
+  if (size < 0.1 * 1024) { //如果小于0.1KB转化成B
+    data = size.toFixed(2) + "B";
+  } else if (size < 0.1 * 1024 * 1024) {//如果小于0.1MB转化成KB
+    data = (size / 1024).toFixed(2) + "KB";
+  } else if (size < 0.1 * 1024 * 1024 * 1024) { //如果小于0.1GB转化成MB
+    data = (size / (1024 * 1024)).toFixed(2) + "MB";
+  } else { //其他转化成GB
+    data = (size / (1024 * 1024 * 1024)).toFixed(2) + "GB";
+  }
+  let sizeStr = data + "";
+  let len = sizeStr.indexOf(".");
+  let dec = sizeStr.substr(len + 1, 2);
+  if (dec === "00") {//当小数点后为00时 去掉小数部分
+    return sizeStr.substring(0, len) + sizeStr.substr(len + 3, 2);
+  }
+  return sizeStr;
 }
 
 /**
@@ -151,4 +176,69 @@ export function deepClone(data) {
     }
     return o;
   }
+}
+
+
+/**
+ * @param value 例： '2020-08-07T03:22:56.000+0000';
+ * @return {String}
+ * @description 兼容IOS时间转化
+ * */
+export const compatibleTime = (value) => {
+  let newStr = value.replace(/-/g, '/').replace(/T/g, ' ');
+  newStr = newStr.substr(0, newStr.indexOf('.'));
+  newStr = new Date(new Date(newStr).getTime() + 3600 * 1000 * 8);
+  return newStr;
+}
+
+
+/**
+ * @description 过滤时间
+ * @return {String}
+ **/
+export const formatDate = (value,timestamp = false,formatStr='YYYY-MM-DD HH:mm:ss') => {
+  let tranValue = value
+  if(typeof(tranValue)=='string' &&  tranValue.indexOf('T')!==-1) tranValue=compatibleTime(tranValue); //兼容IOS时间转化
+  else tranValue=new Date(typeof(tranValue)=='string' ? tranValue.replace(/-/g, '/'):value).getTime();
+  if(timestamp) return tranValue;
+  else return format(tranValue , formatStr);
+}
+
+// 时间戳转多少分钟之前
+export const getDateDiff = (dateTimeStamp)=> {
+  // 时间字符串转时间戳
+  let timestamp = new Date(dateTimeStamp).getTime();
+
+  let minute = 1000 * 60;
+  let hour = minute * 60;
+  let day = hour * 24;
+  let month = day * 30;
+  let year = day * 365;
+  let now = new Date().getTime();
+  let diffValue = now - timestamp;
+  let result;
+  if (diffValue < 0) {
+    return;
+  }
+  let yearC = diffValue / year;
+  let monthC = diffValue / month;
+  let weekC = diffValue / (7 * day);
+  let dayC = diffValue / day;
+  let hourC = diffValue / hour;
+  let minC = diffValue / minute;
+  if (yearC >= 1) {
+    result = "" + parseInt(yearC) + "年前";
+  } else if (monthC >= 1) {
+    result = "" + parseInt(monthC) + "月前";
+  } else if (weekC >= 1) {
+    result = "" + parseInt(weekC) + "周前";
+  } else if (dayC >= 1) {
+    result = "" + parseInt(dayC) + "天前";
+  } else if (hourC >= 1) {
+    result = "" + parseInt(hourC) + "小时前";
+  } else if (minC >= 1) {
+    result = "" + parseInt(minC) + "分钟前";
+  } else
+    result = "刚刚";
+  return result;
 }

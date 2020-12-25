@@ -1,7 +1,8 @@
 import axios from 'axios'
-import router from '@/router'
 import store from '@/store'
 import settings from '@/settings'
+import {notEmpty} from "@/utils/globalMethod";
+import {logout} from "@/utils/auth";
 
 const service = axios.create({
   timeout: settings.timeout,
@@ -14,10 +15,11 @@ service.interceptors.request.use(
   config => {
     const token = store.getters.token
     const url = config.url
-    if (!notAddToken(url)) config.headers.Authorization = token
+    if (!notAddToken(url) && notEmpty(store.getters.token)) config.headers.Authorization = token
     return config
   },
   error => {
+    console.log(error) // for debug
     return Promise.reject(error.response)
   }
 )
@@ -27,15 +29,22 @@ service.interceptors.response.use(
   response => {
     return response.data
   },
-  error => {
-    const { status } = error.response.data
-    if (status === 404) {
-      router.push({ name: 'error404' }).then()
-    } else if (status === 403) {
-      router.push({ name: 'error403' }).then()
-    } else if (status === 401) {
-      store.dispatch('setExpireLogin',true).then()
+  async error => {
+    const {status,msg} = error.response.data
+    // const noPushList = ['/login']
+    if (status === 401) {
+      await logout()
+      let res = await store.dispatch('setExpireLogin', true).then(() => store.getters.expireLogin).catch(res => res)
+      console.log(res)
+    }else if (notEmpty(msg)){
+      await store.dispatch('setMsg', {
+        show:true,
+        color:'red',
+        timeout:5000,
+        text:msg
+      })
     }
+    console.log(store.getters.expireLogin);
     return Promise.reject(error.response)
   }
 )
@@ -43,7 +52,7 @@ service.interceptors.response.use(
 /**
  * @description 白名单，不添加token的接口
  * */
-const notAddToken = (url) =>[
+const notAddToken = (url) => [
   'login'
 ].some(item => url === item)
 

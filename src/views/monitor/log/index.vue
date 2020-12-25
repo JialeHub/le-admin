@@ -1,18 +1,21 @@
 <template>
-  <div class="home">
-    欢迎！
+  <div id="log">
+    log
   </div>
 </template>
 
 <script>
+
   export default {
-    name: 'Home',
-    components: {}
+    name: 'log',
+    components: {},
+    methods: {
+
+    }
   }
 </script>
 
 <style lang="scss">
-  #home{
-
+  #log {
   }
 </style>

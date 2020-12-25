@@ -1,20 +1,25 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import store from '@/store/'
-import {visitApi} from "@/api/Modules";
 import settings from '@/settings'
 
 Vue.use(VueRouter)
 
-const routes = [
+/* Layout */
+import Layout from '@/layout'
+
+
+export const constantRoutes = [
   {
-    name: 'layout',
+    path: '/redirect/:path(.*)',
+    component: () => import('@/views/redirect/index')
+  },
+  {
     path: '/',
     redirect: '/home',
-    component: () => import('@/layout'),
+    component: Layout,
     children: [
-      {name: 'home', path: '/home', meta: {title: '首页'}, component: () => import('@/views/home/index')},
-      {name: 'home2', path: '/home2', meta: {title: '首页2'}, component: () => import('@/views/home/index')},
+      {name: 'Home', path: '/home', meta: {title: '首页'}, component: () => import('@/views/home/index')},
+      {name: 'Home2', path: '/home2', meta: {title: '首页2'}, component: () => import('@/views/home/index')},
     ]
   },
   {
@@ -22,43 +27,59 @@ const routes = [
     name: 'Login',
     component: () => import('@/views/login/index')
   },
+  {
+    name: 'Error403',
+    path: '/403',
+    component: () => import('@/views/error-page/403'),
+  },
+  {
+    name: 'Error404',
+    path: '/404',
+    component: () => import('@/views/error-page/404'),
+  },
+  // { path: '*', redirect: '/404' }
 ]
 
-
-const router = new VueRouter({
-  mode: settings.isHistory ? 'history' : 'hash',
-  base: process.env.BASE_URL,
-  routes,
-  scrollBehavior(to, from, savedPosition) {
-    if (savedPosition) {
-      return savedPosition
-    } else if (to.name !== from.name) {
-      return {x: 0, y: 0}
-    } else if (to.hash) {
-      return {
-        selector: to.hash,
-        offset: {x: 0, y: 0}
+export const asyncRoutes = [
+  {
+    path: '/error',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: 'ErrorPages',
+    meta: {
+      title: 'Error Pages',
+      icon: '404'
+    },
+    children: [
+      {
+        path: '403',
+        component: () => import('@/views/error-page/403'),
+        name: 'Page403',
+        meta: { title: '403', noCache: true }
+      },
+      {
+        path: '404',
+        component: () => import('@/views/error-page/404'),
+        name: 'Page404',
+        meta: { title: '404', noCache: true }
       }
-    }
-  }
+    ]
+  },
+  // { path: '*', redirect: '/404'}
+]
+
+const createRouter = () => new VueRouter({
+  mode: settings.isHistory ? 'history' : 'hash',
+  routes: constantRoutes,
+  scrollBehavior: () => ({ y: 0 })
+  // base: process.env.BASE_URL,
 })
 
-const needLogin = [] // 拦截对象
+const router = createRouter()
 
-// 路由守卫：
-router.beforeEach((to, from, next) => {
-  // 检测token是否存在（是否登录）
-  visitApi()
-  if (to.meta.title) document.title = to.meta.title
-  if (store.getters.token && store.getters.token !== '') {
-    next()
-  } else {
-    if (needLogin.indexOf(to.path) === -1) {
-      next()
-    } else {
-      next('/login?redirect=' + to.path)
-    }
-  }
-})
+export function resetRouter() {
+  const newRouter = createRouter()
+  router.matcher = newRouter.matcher // reset router
+}
 
 export default router

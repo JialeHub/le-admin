@@ -8,7 +8,7 @@ import {deepClone, tryJSONParse, tryReadUnknown} from '@/utils/globalMethod'
 Vue.use(Vuex)
 
 // 自动获取modules下的*.js
-const modulesFiles = require.context("./Modules", true, /\.js$/);
+const modulesFiles = require.context("./modules", true, /\.js$/);
 const modules = modulesFiles.keys().reduce((modules, modulePath) => {
   const moduleName = modulePath.replace(/^\.\/(.*)\.\w+$/, "$1");
   const value = modulesFiles(modulePath);
@@ -17,11 +17,13 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
 }, {});
 const cloneModules = deepClone(modules);
 
+//持久化（关闭浏览器仍保留数据）
 const plugins = navigator.cookieEnabled?[
+  //登录信息
   createPersistedState({
-    key: `${settings.prefix}-INFO`,
+    key: `${settings.prefix}-LOGIN`,
     storage: window.localStorage,
-    reducer: val => ({info: val.info}),
+    reducer: val => ({login: val.login}),
   }),
   createPersistedState({
     key: `${settings.prefix}-SETTINGS`,
@@ -32,8 +34,9 @@ const plugins = navigator.cookieEnabled?[
     key: `${settings.prefix}-TOKEN`,
     storage: {
       getItem: key => Cookies.get(key),
-      setItem: (key, value) =>
-        Cookies.set(key, value, {expires: tryReadUnknown(tryJSONParse(window.localStorage.getItem(`${settings.prefix}-INFO`)),".info.rememberMe") ? settings.tokenCookieExpires : 1}),
+      setItem: (key, value) =>{
+        Cookies.set(key, value, {expires: tryReadUnknown(tryJSONParse(window.localStorage.getItem(`${settings.prefix}-LOGIN`)),".info.rememberMe") ? settings.tokenCookieExpires : 1})
+      },
       removeItem: key => Cookies.remove(key)
     },
     reducer: val => ({token: val.token})

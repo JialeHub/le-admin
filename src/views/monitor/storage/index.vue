@@ -1,18 +1,21 @@
 <template>
-  <div id="appFooter">
-
+  <div class="storage">
+    storage
   </div>
 </template>
 
 <script>
+
   export default {
-    name: "appFooter",
-    data() {
-      return {}
+    name: 'storage',
+    components: {},
+    methods: {
+
     }
   }
 </script>
 
 <style lang="scss">
-
+  #storage {
+  }
 </style>

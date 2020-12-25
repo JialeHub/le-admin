@@ -6,10 +6,12 @@ import store,{resetStore} from '@/store'
 //断言，为编辑器导航,无实质用途
 let assert = {
   $api: globalApi,
+  $getDateDiff: globalMethod.getDateDiff,
+  $formatDate: globalMethod.formatDate,
   $notEmpty: globalMethod.notEmpty,
+  $sizeToStr: globalMethod.sizeToStr,
   $addBaseURL: globalMethod.addBaseURL,
   $deepClone: globalMethod.deepClone,
-  $RSAEncrypt: globalMethod.RSAEncrypt,
   $tryJSONStringify: globalMethod.tryJSONStringify,
   $tryJSONParse: globalMethod.tryJSONParse,
   $tryReadUnknown: globalMethod.tryReadUnknown,

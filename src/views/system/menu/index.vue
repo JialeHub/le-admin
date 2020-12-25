@@ -1,18 +1,21 @@
 <template>
-  <div class="home">
-    欢迎！
+  <div id="menu">
+    menu
   </div>
 </template>
 
 <script>
+
   export default {
-    name: 'Home',
-    components: {}
+    name: 'menu',
+    components: {},
+    methods: {
+
+    }
   }
 </script>
 
 <style lang="scss">
-  #home{
-
+  #menu {
   }
 </style>

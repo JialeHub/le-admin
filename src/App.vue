@@ -14,7 +14,11 @@
     mounted() {
 
     },
-
+    watch: {
+      '$storeGet.expireLogin'(v){
+        console.log(v);
+      }
+    },
 
     data: () => ({}),
   };

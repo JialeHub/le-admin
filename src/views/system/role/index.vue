@@ -1,18 +1,21 @@
 <template>
-  <div class="home">
-    欢迎！
+  <div id="role">
+    role
   </div>
 </template>
 
 <script>
+
   export default {
-    name: 'Home',
-    components: {}
+    name: 'role',
+    components: {},
+    methods: {
+
+    }
   }
 </script>
 
 <style lang="scss">
-  #home{
-
+  #role {
   }
 </style>

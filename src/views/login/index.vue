@@ -13,7 +13,7 @@
   export default {
     name: 'Login',
     components: {
-      ContainerLogin: ()=>import('@/components/ContainerLogin')
+      ContainerLogin: ()=>import('./components/ContainerLogin')
     }
   }
 </script>

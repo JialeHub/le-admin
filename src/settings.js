@@ -16,6 +16,8 @@ module.exports = {
   /**
    * @description 系统设置
    * */
+  // 全局显示加载等待中...
+  appLoading: false,
   // store's key的前缀
   prefix: 'V',
   // 是否开启验证码
@@ -50,7 +52,6 @@ module.exports = {
   fixToolbar: true,
   // 侧边logo
   logoMenu: true,
-
 
 
   // 是否固定头部

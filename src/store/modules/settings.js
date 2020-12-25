@@ -2,6 +2,7 @@ import defaultSettings from '@/settings'
 import {objectEvaluate} from "@/utils/globalMethod";
 
 const {
+  appLoading,
   menuTitle,
   version,
   themes,
@@ -20,6 +21,7 @@ const type = {
 };
 
 const state = {
+  appLoading,
   menuTitle,
   version,
   themes,

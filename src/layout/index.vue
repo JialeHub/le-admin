@@ -23,12 +23,20 @@
     <!--登陆提示框-->
     <v-dialog v-model="loginDialog" max-width="380" persistent>
       <v-card class="loginDialog">
-        <v-btn color="primary" small class="closeBtn" icon @click="loginDialog=false">
+        <v-btn color="primary" small class="closeBtn" icon @click="goLogin">
           <v-icon>mdi-close</v-icon>
         </v-btn>
         <container-login @close-login-dialog="loginDialog=false" comStatus="expireLogin"/>
       </v-card>
     </v-dialog>
+
+    <!--消息提示-->
+    <v-snackbar v-model="msgObj.show" :timeout="msgObj.timeout" :color="msgObj.color">
+      {{ msgObj.text }}
+      <template v-slot:action="{ attrs }">
+        <v-btn  text v-bind="attrs" @click="msgObj.show=false" > OK </v-btn>
+      </template>
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -46,9 +54,12 @@
       DrawerNavigation: () => import('@/layout/DrawerNavigation'),
       DrawerSettings: () => import('@/layout/DrawerSettings'),
       AppFooter: () => import('@/layout/Footer'),
-      ContainerLogin: () => import('@/components/ContainerLogin')
+      ContainerLogin: () => import('@/views/login/components/ContainerLogin')
     },
     methods: {
+      goLogin(){
+        this.$router.push(`/login?redirect=${this.$route.path}`).catch(err=>console.warn(err))
+      },
       navigationFun() {
         if (!this.miniMenu&&this.navigation&&!this.logoMenu)  this.miniMenu = !this.miniMenu;
         else this.navigation = !this.navigation;
@@ -98,6 +109,14 @@
             key: 'miniMenu',
             value: value
           })
+        }
+      },
+      msgObj: {
+        get() {
+          return this.$storeGet.msg;
+        },
+        set(value) {
+          this.$storeSet('msg', value)
         }
       },
       loginDialog: {

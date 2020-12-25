@@ -8,12 +8,15 @@
       <v-btn icon><v-icon>mdi-cog-outline</v-icon></v-btn>
     </v-app-bar-nav-icon>
 
-    <v-btn icon><v-icon>mdi-bell-outline</v-icon></v-btn>
+    <v-btn icon v-if="false"><v-icon>mdi-bell-outline</v-icon></v-btn>
 
     <v-menu bottom min-width="200px" rounded offset-y>
       <template v-slot:activator="{ on }">
         <v-btn icon v-on="on" elevation="1">
-          <v-avatar size="40" >
+          <v-avatar  v-if="$notEmpty(avatar)" size="40">
+            <img :src="$addBaseURL(avatar)"  alt=""/>
+          </v-avatar>
+          <v-avatar size="40"  v-else>
             <v-btn icon><v-icon>mdi-account-circle</v-icon></v-btn>
           </v-avatar>
         </v-btn>
@@ -21,21 +24,19 @@
       <v-card >
         <v-list-item-content class="justify-center">
           <div class="mx-auto text-center">
-            <v-avatar color="brown" >
-              <span class="white--text headline">JD</span>
+            <v-avatar  v-if="$notEmpty(avatar)">
+              <img :src="$addBaseURL(avatar)"  alt=""/>
             </v-avatar>
-            <h3>Micro Lee</h3>
-            <p class="caption mt-1">
-             799670335@qq.com
-            </p>
+            <v-icon v-else>mdi-account-circle</v-icon>
+
+            <h3 class="mt-2">{{nickname}}</h3>
+            <p class="mt-1">{{username}}</p>
             <v-divider class="my-3"></v-divider>
-            <v-btn depressed rounded text>
+            <v-btn depressed rounded text v-if="false">
               Edit Account
             </v-btn>
-            <v-divider class="my-3"></v-divider>
-            <v-btn depressed rounded text>
-              Disconnect
-            </v-btn>
+            <v-divider class="my-3" v-if="false"></v-divider>
+            <v-btn depressed shaped text @click="logout">退出登录</v-btn>
           </div>
         </v-list-item-content>
       </v-card>
@@ -45,12 +46,30 @@
 </template>
 
 <script>
+  import {logout} from "@/utils/auth";
+
   export default {
     name: "appBar",
     data() {
       return {}
     },
+    computed:{
+      avatar(){
+        return this.$storeGet.user.avatar
+      },
+      nickname(){
+        return this.$storeGet.user.nickname
+      },
+      username(){
+        return this.$storeGet.user.username
+      },
+    },
     methods: {
+      logout(){
+        logout().then(() => {
+          this.$router.replace({path: '/login'})
+        })
+      },
       navigationSet(){
         this.$emit('navigation-fun',)
       },
