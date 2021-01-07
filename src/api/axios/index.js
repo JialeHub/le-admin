@@ -47,7 +47,26 @@ export const axiosG = (url, param) => {
       method: 'get',
       url: url,
       params: param,
-      paramsSerializer: params => qs.stringify(params, { arrayFormat: 'repeat' })
+      paramsSerializer: params => qs.stringify(params)//, { arrayFormat: 'repeat' }
+    })
+      .then(result => resolve(result))
+      .catch(error => reject(error))
+  })
+}
+
+/**
+ * @param {String} url 请求地址
+ * @param {Object=} param 参数 数组要以" 'test[]':value "形式传参
+ * @description get
+ * */
+export const axiosGs = (url, param) => {
+  return new Promise((resolve, reject) => {
+    service({
+      method: 'get',
+      url: url,
+      params: param,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      transformRequest: [data => qs.stringify(data)]
     })
       .then(result => resolve(result))
       .catch(error => reject(error))
@@ -66,6 +85,25 @@ export const axiosD = (url, param) => {
       url: url,
       params: param,
       paramsSerializer: params => qs.stringify(params, { arrayFormat: 'repeat' })
+    })
+      .then(result => resolve(result))
+      .catch(error => reject(error))
+  })
+}
+
+/**
+ * @param {String} url 请求地址
+ * @param {Object} param {name: LiHua, age: 18}
+ * @description post，键值对格式。
+ * */
+export const axiosDs = (url, param) => {
+  return new Promise((resolve, reject) => {
+    service({
+      method: 'delete',
+      url: url,
+      data: param,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      transformRequest: [data => qs.stringify(data)]
     })
       .then(result => resolve(result))
       .catch(error => reject(error))
@@ -245,9 +283,10 @@ export const axiosFs = (url, param, callback = undefined, source = undefined) =>
 /**
  * @param {String} url 请求地址
  * @param {Object=} param 请求地址
+ * @param fileName 文件名
  * @description 下载文件。
  * */
-export const axiosL = (url, param) => {
+export const axiosL = (url, param,fileName) => {
   return new Promise((resolve, reject) => {
     service({
       method: 'get',
@@ -256,7 +295,19 @@ export const axiosL = (url, param) => {
       params: param,
       paramsSerializer: params => qs.stringify(params, { arrayFormat: 'repeat' })
     })
-      .then(result => resolve(result))
+      .then(result => {
+        if (!result) {
+          return
+        }
+        let url = window.URL.createObjectURL(new Blob([result],{type:result.type}))
+        let link = document.createElement('a')
+        link.style.display = 'none'
+        link.href = url
+        link.setAttribute('download', fileName)
+        document.body.appendChild(link)
+        link.click()
+        resolve(result)
+      })
       .catch(error => reject(error))
   })
 }
