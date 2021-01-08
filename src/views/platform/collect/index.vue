@@ -9,7 +9,7 @@
           <v-toolbar-title>{{$route.meta.title}}</v-toolbar-title>
           <v-divider class="mx-4" inset vertical/>
           <v-spacer/>
-          <v-btn depressed color="warning" @click="collect">导出数据<v-icon right dark>mdi-cloud-download</v-icon></v-btn>
+          <v-btn depressed color="warning" @click="collectExport">导出数据<v-icon right dark>mdi-cloud-download</v-icon></v-btn>
         </v-toolbar>
         <v-divider/>
         <!--筛选搜索区-->
@@ -75,6 +75,7 @@
 <script>
 
   import {
+    collectExportApi,
     getCollectApi,
   } from "@/api/modules";
 
@@ -142,6 +143,11 @@
       },
     },
     methods: {
+      async collectExport(){
+        let data = {...this.option}
+        let res = await collectExportApi(data).then(res=>res).catch(err=>err)
+        if (res.status === 200) window.open(this.$addBaseURL(res.path))
+      },
       getCollect(){
         if (!this.lockGet){
           let data = {...this.option}

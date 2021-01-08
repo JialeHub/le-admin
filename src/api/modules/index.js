@@ -21,4 +21,6 @@ export const delPublishsApi = data => axiosDs('/publish/delete',data) //批量�
 export const downloadFileApi = id => axiosG('/publish/downloadFiles/'+id) //下载指定记录图片
 export const downloadFilesApi = data => axiosK('/publish/downloadFiles',data) //下载批量记录图片
 export const getCollectApi = data => axiosG('/publish/collect',data) //汇总用户分数
+export const collectExportApi = data => axiosG('/publish/collectExport',data) //汇总用户分数
+export const dataExportApi = data => axiosG('/publish/dataExport',data) //导出记录数据
 

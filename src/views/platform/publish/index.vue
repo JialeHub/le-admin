@@ -10,7 +10,10 @@
           <v-toolbar-title>{{$route.meta.title}}</v-toolbar-title>
           <v-divider class="mx-4" inset vertical/>
           <v-spacer/>
-          <v-btn depressed color="success" @click="downloadFiles">批量下载
+          <v-btn depressed color="warning" @click="dataExport">导出数据
+            <v-icon right dark>mdi-cloud-download</v-icon>
+          </v-btn>
+          <v-btn depressed color="success" class="ml-3" @click="downloadFiles">批量下载
             <v-icon right dark>mdi-cloud-download</v-icon>
           </v-btn>
           <v-btn depressed color="error" class="ml-3" @click="deleteItems">批量删除
@@ -222,6 +225,7 @@
 <script>
 
   import {
+    collectExportApi, dataExportApi,
     delPublishApi,
     delPublishsApi,
     downloadFileApi,
@@ -417,6 +421,11 @@
       },
       deleteItems() {
         this.dialogDeletes = true
+      },
+      async dataExport(){
+        let data = {...this.option}
+        let res = await dataExportApi(data).then(res=>res).catch(err=>err)
+        if (res.status === 200) window.open(this.$addBaseURL(res.path))
       },
       async deleteItemsConfirm() {
         this.formLoading = true;
