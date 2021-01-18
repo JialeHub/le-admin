@@ -16,23 +16,24 @@
             </template>
             <v-card>
               <v-card-title>
-                <span class="headline">编辑</span>
+                <span class="headline">修改密码</span>
               </v-card-title>
               <v-card-text>
-                <div class="" style="display: flex;justify-content: center">
-                  <v-btn @click="dialogResetPass=true">重置密码</v-btn>
+                <div class="" style="display: flex;justify-content: space-between">
+                  <v-text-field v-model="editForm.password" label="密码" single-line hide-details></v-text-field>
+                  <!--<v-btn @click="dialogResetPass=true" >修改密码</v-btn>-->
                 </div>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="closeEdit"> 取消 </v-btn>
-                <v-btn color="blue darken-1" text @click="save"> 保存 </v-btn>
+                <v-btn color="blue darken-1" text @click="dialogResetPass=true"> 修改 </v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
           <v-dialog v-model="dialogResetPass" max-width="500px">
             <v-card>
-              <v-card-title class="headline">确认重置该用户密码吗？</v-card-title>
+              <v-card-title class="headline">确认修改该用户密码吗？</v-card-title>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="dialogResetPass=false">取消</v-btn>
@@ -84,7 +85,7 @@
 
 <script>
 
-  import {delPublishApi, getUserListApi, updatePublishApi, updateUserApi} from "@/api/modules";
+  import {delPublishApi, getUserListApi, updateUserApi} from "@/api/modules";
   import store from "@/store";
   import {RSAEncrypt} from "@/utils/cryptology";
 
@@ -123,7 +124,8 @@
         searchList: []
       },
       editForm:{
-        username: ''
+        username: '',
+        password:''
       },
       editedItem: {},
       defaultItem: {},
@@ -144,9 +146,10 @@
     },
     methods: {
       async resetPassConfirm(){
-        this.formLoading = true;
+        await this.save()
+        /*this.formLoading = true;
 
-        let res = await updateUserApi(this.editedIndex,{password:RSAEncrypt(this.editForm.username)}).then(res => res).catch(err => err).finally(() => {
+        let res = await updateUserApi(this.editedIndex,{password:RSAEncrypt()}).then(res => res).catch(err => err).finally(() => {
           this.formLoading = false;
         })
         if (this.$notEmpty(res['msg']) && this.$notEmpty(res['status']) && res['status'] === 200) {
@@ -155,7 +158,7 @@
           await store.dispatch('setMsg', {show: true, color: 'deep-orange', timeout: 5000, text: res['msg']})
         }else{
           await store.dispatch('setMsg', {show: true, color: 'deep-orange', timeout: 5000, text: '发生未知错误'})
-        }
+        }*/
         this.dialogResetPass=false
       },
       optionsChange(v) {
@@ -216,7 +219,9 @@
       },
       async save() {
         this.formLoading = true;
-        let res = await updatePublishApi(this.editedIndex,{...this.editForm}).then(res=>res).catch(err=>err).finally(() => {
+        let data = {...this.editForm}
+        data.password = RSAEncrypt(data.password)
+        let res = await updateUserApi(this.editedIndex,data).then(res=>res).catch(err=>err).finally(() => {
           this.formLoading = false;
           this.getUserList();
         });

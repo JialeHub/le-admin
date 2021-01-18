@@ -163,10 +163,10 @@
       <template v-slot:expanded-item="{ headers, item }">
         <td :colspan="headers.length">
           <div class="" style="padding: 10px;width: 100%;display: flex;flex-direction: column">
-            <div class="title" style="width: 100%" v-if="$notEmpty(item['title'])"><span>标题:</span><span> {{item['title']}}</span>
+              <!--<div class="title" style="width: 100%" v-if="$notEmpty(item['title'])"><span>作业天数:</span><span> {{item['title']}}</span>
             </div>
-            <div class="title" style="width: 100%" v-if="$notEmpty(item['content'])"><span>内容:</span><span> {{item['content']}}</span>
-            </div>
+            <div class="title" style="width: 100%" v-if="$notEmpty(item['content'])"><span>卖鱼单船号:</span><span> {{item['content']}}</span>
+            </div>-->
             <div class="title" style="width: 100%" v-if="$notEmpty(item['evaluate'])"><span>回复:</span><span> {{item['evaluate']}}</span>
             </div>
             <div class="ip" style="width: 100%" v-if="$notEmpty(item['ip'])">
@@ -225,7 +225,7 @@
 <script>
 
   import {
-    collectExportApi, dataExportApi,
+    dataExportApi,
     delPublishApi,
     delPublishsApi,
     downloadFileApi,
@@ -272,12 +272,12 @@
       editedIndex: -1,
       selected: [],
       headers: [
-        // { text: '标题', value: 'title'},
-        // { text: '文案', value: 'content' },
         {text: 'ID', value: 'id', class: 'minWidth60'},
         // {text: '用户id', value: 'user.id', sortable: false,},
         {text: '账号', value: 'username', sortable: false, class: 'minWidth80'},
         {text: '头像', value: 'userAvatar', sortable: false, class: 'minWidth60'},
+        { text: '作业天数', value: 'title'},
+        { text: '卖鱼单船号', value: 'content' },
         {text: '图片数量', value: 'fileLength', sortable: false, class: 'minWidth80'},
         {text: 'GPS经纬度', value: 'location', class: 'minWidth80'},
         // {text: 'GPS地址', value: 'locationResAddr',class:'minWidth150'},

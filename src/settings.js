@@ -3,11 +3,11 @@ module.exports = {
    * @description 网站设置
    * */
   // 网站标题
-  title: '海洋图片分享后台管理系统',
+  title: '渔业信息采集后台管理系统',
   // 菜单标题
   menuTitle: 'Img - Admin',
   // 版本号
-  version: '1.0.0',
+  version: '1.0.3',
   // 底部文字
   footerTxt: '',
   // 备案号

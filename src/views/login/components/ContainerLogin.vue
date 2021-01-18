@@ -246,7 +246,7 @@
         margin: 0 auto 25px;
         width: 84px;
         height: 84px;
-        background-image: url("~@/assets/le_Admin_logo.png");
+        background-image: url("~@/assets/logo_tran.png");
         display: block;
         background-size: 84px;
         background-position: center top;
