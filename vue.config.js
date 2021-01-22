@@ -32,7 +32,7 @@ module.exports = {
         }
       },
       '/prodApi/': {
-        target: 'http://49.235.110.8:2346/',
+        target: 'http://121.196.153.82:8080/',
         changeOrigin: true,
         pathRewrite: {
           '^/prodApi/': ''

@@ -56,7 +56,7 @@
     },
     computed: {
       menu() {
-        return this.$storeGet.menu
+          return this.$storeGet.menu
       },
       menuTitle() {
         return this.$storeGet.setting.menuTitle

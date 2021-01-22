@@ -29,7 +29,6 @@ router.beforeEach(async (to, from, next) => {
         next()
       } else {
         try {
-
           await getUserInfoMenu().catch(err=>{
             console.warn(err);
             throw new Error(err)
@@ -43,6 +42,7 @@ router.beforeEach(async (to, from, next) => {
           await logout()// 删除令牌，转到登录页面重新登录
           next(`/login?redirect=${to.path}`)
           NProgress.done()
+
         }
       }
     }

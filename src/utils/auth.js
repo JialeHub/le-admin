@@ -14,7 +14,7 @@ export async function login(form) {
   let data = {...form}
   data['password'] = RSAEncrypt(form['password'])
   delete data.showPass
-  return new Promise((resolve,reject) => {
+  return new Promise((resolve, reject) => {
     loginApi(data).then(async res => {
       if (res.status === 200) {
         await store.dispatch('setRememberMe', {
@@ -43,11 +43,17 @@ export async function login(form) {
  * @description 获取个人信息和菜单
  * */
 export async function getUserInfoMenu() {
-  await store.dispatch('changeSetting', {key: 'appLoading',value: true}).catch(err=>err)
-  return new Promise((resolve,reject) => {
-    getUserInfo().then(res1=>{
-      getMenu().then(res2=> resolve([res1,res2])).catch(err=>reject(err)).finally(()=>store.dispatch('changeSetting', {key: 'appLoading',value: false}).catch(err=>err))
-    }).catch(err=>reject(err)).finally(()=>store.dispatch('changeSetting', {key: 'appLoading',value: false}).catch(err=>err))
+  await store.dispatch('changeSetting', {key: 'appLoading', value: true}).catch(err => err)
+  return new Promise((resolve, reject) => {
+    getUserInfo().then(res1 => {
+      getMenu().then(res2 => resolve([res1, res2])).catch(err => reject(err)).finally(() => store.dispatch('changeSetting', {
+        key: 'appLoading',
+        value: false
+      }).catch(err => err))
+    }).catch(err => reject(err)).finally(() => store.dispatch('changeSetting', {
+      key: 'appLoading',
+      value: false
+    }).catch(err => err))
   })
 }
 
@@ -56,7 +62,7 @@ export async function getUserInfoMenu() {
  * @description 获取个人信息
  * */
 export function getUserInfo() {
-  return new Promise((resolve,reject) => {
+  return new Promise((resolve, reject) => {
     if (notEmpty(store.getters.token)) {
       getUserInfoApi().then(async res => {
         if (res.status === 200) {
@@ -79,13 +85,18 @@ export function getUserInfo() {
  * @description 拉取菜单
  * */
 export function getMenu() {
-  return new Promise((resolve,reject) => {
+  return new Promise((resolve, reject) => {
     if (notEmpty(store.getters.token)) {
       initMenuApi().then(async res => {
         if (res.status === 200) {
-          await store.dispatch('setMenu', res['menu'])
-          resolve(res['menu'])
-        } else {
+          let allHidden = res['menu'].map(item=>item['hidden'])
+          if (allHidden.reduce((total, num)=>total * num)===0){
+            await store.dispatch('setMenu', res['menu'])
+            resolve(res['menu'])
+          }else{
+            reject('暂无可用菜单')
+          }
+        }else {
           reject(res)
         }
       }).catch(err => {
@@ -103,7 +114,7 @@ export function getMenu() {
  * @description 注销
  * */
 export async function logout() {
-  if (notEmpty(store.getters.token)) await logoutApi({}).catch(err=>err);
+  if (notEmpty(store.getters.token)) await logoutApi({}).catch(err => err);
   await Promise.all([
     store.dispatch('setToken', ''),
     store.dispatch('setUser', {}),
@@ -126,27 +137,27 @@ export function filterAsyncRoutes(routes) {
       if (tmp.children) {
         tmp.children = filterAsyncRoutes(tmp.children)
       }
-      let tmp2 = {meta:{}}
-      if (notEmpty(tmp['name'])) tmp2['name']=tmp['name']
-      if (notEmpty(tmp['path'])) tmp2['path']=tmp['path']
-      if (notEmpty(tmp['component'])) tmp2['component']=tmp['component']
-      if (notEmpty(tmp['redirect'])) tmp2['redirect']=tmp['redirect']
-      if (notEmpty(tmp['children'])) tmp2['children']=tmp['children']
-      if (notEmpty(tmp['title'])) tmp2['meta']['title']=tmp['title']
-      if (notEmpty(tmp['permission'])) tmp2['meta']['permission']=tmp['permission']
-      if (notEmpty(tmp['icon'])) tmp2['meta']['icon']=tmp['icon']
-      if (notEmpty(tmp['cache'])) tmp2['meta']['cache']=tmp['cache']
-      if (notEmpty(tmp['hidden'])) tmp2['meta']['hidden']=tmp['hidden']
-      if (notEmpty(tmp['model'])) tmp2['meta']['model']=tmp['model']
-      if (notEmpty(tmp['alwaysShow'])) tmp2['meta']['alwaysShow']=tmp['alwaysShow']
-      if (notEmpty(tmp['breadcrumb'])) tmp2['meta']['breadcrumb']=tmp['breadcrumb']
-      if (notEmpty(tmp['affix'])) tmp2['meta']['affix']=tmp['affix']
-      if (notEmpty(tmp['activeMenu'])) tmp2['meta']['activeMenu']=tmp['activeMenu']
-      if (notEmpty(tmp2['component'])){
+      let tmp2 = {meta: {}}
+      if (notEmpty(tmp['name'])) tmp2['name'] = tmp['name']
+      if (notEmpty(tmp['path'])) tmp2['path'] = tmp['path']
+      if (notEmpty(tmp['component'])) tmp2['component'] = tmp['component']
+      if (notEmpty(tmp['redirect'])) tmp2['redirect'] = tmp['redirect']
+      if (notEmpty(tmp['children'])) tmp2['children'] = tmp['children']
+      if (notEmpty(tmp['title'])) tmp2['meta']['title'] = tmp['title']
+      if (notEmpty(tmp['permission'])) tmp2['meta']['permission'] = tmp['permission']
+      if (notEmpty(tmp['icon'])) tmp2['meta']['icon'] = tmp['icon']
+      if (notEmpty(tmp['cache'])) tmp2['meta']['cache'] = tmp['cache']
+      if (notEmpty(tmp['hidden'])) tmp2['meta']['hidden'] = tmp['hidden']
+      if (notEmpty(tmp['model'])) tmp2['meta']['model'] = tmp['model']
+      if (notEmpty(tmp['alwaysShow'])) tmp2['meta']['alwaysShow'] = tmp['alwaysShow']
+      if (notEmpty(tmp['breadcrumb'])) tmp2['meta']['breadcrumb'] = tmp['breadcrumb']
+      if (notEmpty(tmp['affix'])) tmp2['meta']['affix'] = tmp['affix']
+      if (notEmpty(tmp['activeMenu'])) tmp2['meta']['activeMenu'] = tmp['activeMenu']
+      if (notEmpty(tmp2['component'])) {
         if (tmp2['component'] === 'Layout') { // Layout组件特殊处理
           tmp2['component'] = () => import('@/layout/index')
         } else {
-          let src = addBaseURL(tmp2['component'],true)
+          let src = addBaseURL(tmp2['component'], true)
           tmp2['component'] = () => import(`@/views${src}`)
         }
       }

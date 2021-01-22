@@ -6,10 +6,15 @@ export const loginApi = data => axiosK('/user/login', data) //登录
 export const logoutApi = data => axiosD('/user/logout', data) //退出登录
 export const getUserInfoApi = data => axiosG('/user/info', data) //拉取用户信息
 export const initMenuApi = data => axiosG('/user/initMenu', data) //获取菜单更新权限
+export const sendForgetEmailApi = data => axiosG('/user/sendForgetEmail', data) //发送找回密码验证码邮件
+export const getForgetPassTokenApi = data => axiosG('/user/getForgetPassToken', data) //邮件验证并返回重置密码临时Token
+export const updatePassBySessionTokenApi = data => axiosK('/user/updatePassBySessionToken', data) //sessionToken验证并设置新密码
+export const getLoginCaptchaApi = data => axiosG('/user/getLoginCaptcha', data) //获取登录验证码
 
 export const getUserListApi = data => axiosG('/user/list', data) //获取用户列表
 export const updateUserApi = (id,data) => axiosP('/user/update/'+id, data) //修改用户信息
 
+export const testApi = data => axiosG('/test', data) //测试
 export const postPublishApi = data => axiosK('/publish', data) //发布(测试)
 export const uploadApi = data => axiosF('/file', data) //上传文件(测试)
 export const collectMeApi = data => axiosG('/publish/collectMe', data) //获取自己的分数(测试)

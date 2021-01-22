@@ -27,7 +27,7 @@ service.interceptors.request.use(
 // 响应拦截
 service.interceptors.response.use(
   response => {
-    return response.data
+    return response.data||response
   },
   async error => {
     const {status,msg} = error.response.data
@@ -44,7 +44,6 @@ service.interceptors.response.use(
         text:msg
       })
     }
-    console.log(store.getters.expireLogin);
     return Promise.reject(error.response)
   }
 )
